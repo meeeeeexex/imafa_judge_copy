@@ -27,9 +27,9 @@ onMounted(async () => {
     <span>Loading tournament...</span>
   </div>
 
-  <div v-else-if="tournament" class="space-y-6">
-    <div class="rounded-xl border border-slate-800 bg-surface p-6">
-      <h1 class="font-display text-4xl font-bold tracking-tight text-slate-50">{{ tournament.name }}</h1>
+  <div v-else-if="tournament" class="space-y-4 sm:space-y-6">
+    <div class="rounded-xl border border-slate-800 bg-surface p-4 sm:p-6">
+      <h1 class="font-display text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">{{ tournament.name }}</h1>
       <p class="mt-1 text-slate-400">{{ participants.length }} participants</p>
     </div>
 
@@ -39,14 +39,14 @@ onMounted(async () => {
         <table class="w-full">
           <thead>
             <tr class="border-b border-slate-700 bg-slate-800/50">
-              <th class="px-5 py-3.5 text-left text-sm font-semibold uppercase tracking-wider text-slate-400">#</th>
-              <th class="px-5 py-3.5 text-left text-sm font-semibold uppercase tracking-wider text-slate-400">Name</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold uppercase tracking-wider text-slate-400 sm:px-5 sm:py-3.5">#</th>
+              <th class="px-4 py-3 text-left text-sm font-semibold uppercase tracking-wider text-slate-400 sm:px-5 sm:py-3.5">Name</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-800">
             <tr v-for="p in participants" :key="p.id" class="transition-colors hover:bg-slate-800/30">
-              <td class="px-5 py-3.5 font-medium text-slate-400">{{ p.id }}</td>
-              <td class="px-5 py-3.5 text-slate-200">{{ p.display_name }}</td>
+              <td class="px-4 py-3 font-medium text-slate-400 sm:px-5 sm:py-3.5">{{ p.id }}</td>
+              <td class="px-4 py-3 text-slate-200 sm:px-5 sm:py-3.5">{{ p.display_name }}</td>
             </tr>
           </tbody>
         </table>

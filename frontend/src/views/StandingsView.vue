@@ -24,10 +24,11 @@ onMounted(async () => {
     <span>Computing standings...</span>
   </div>
 
-  <div v-else class="space-y-6">
-    <h1 class="font-display text-4xl font-bold tracking-tight text-slate-50">Standings</h1>
+  <div v-else class="space-y-4 sm:space-y-6">
+    <h1 class="font-display text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">Standings</h1>
 
-    <div class="overflow-hidden rounded-xl border border-slate-800">
+    <!-- Desktop table -->
+    <div class="hidden sm:block overflow-hidden rounded-xl border border-slate-800">
       <table class="w-full">
         <thead>
           <tr class="border-b border-slate-700 bg-slate-800/50">
@@ -73,6 +74,53 @@ onMounted(async () => {
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Mobile cards -->
+    <div class="space-y-3 sm:hidden">
+      <div
+        v-for="(entry, i) in standings"
+        :key="entry.participant_id"
+        class="rounded-xl border border-slate-800 p-4"
+        :class="i < 3 ? 'bg-accent/5' : 'bg-surface'"
+      >
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span
+              class="inline-flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold"
+              :class="
+                i === 0 ? 'bg-yellow-500/20 text-yellow-400' :
+                i === 1 ? 'bg-slate-400/20 text-slate-300' :
+                i === 2 ? 'bg-amber-600/20 text-amber-500' :
+                'bg-slate-800 text-slate-500'
+              "
+            >
+              {{ i + 1 }}
+            </span>
+            <span class="text-base font-semibold text-slate-200">{{ entry.display_name }}</span>
+          </div>
+          <span class="text-xl font-bold text-accent">{{ entry.total_points }}</span>
+        </div>
+
+        <div class="mt-3 grid grid-cols-4 gap-2 text-center text-sm">
+          <div class="rounded-lg bg-slate-800/50 px-2 py-1.5">
+            <div class="text-xs text-slate-500">GP</div>
+            <div class="font-medium text-slate-300">{{ entry.games_played }}</div>
+          </div>
+          <div class="rounded-lg bg-slate-800/50 px-2 py-1.5">
+            <div class="text-xs text-slate-500">W</div>
+            <div class="font-semibold text-accent">{{ entry.wins }}</div>
+          </div>
+          <div class="rounded-lg bg-slate-800/50 px-2 py-1.5">
+            <div class="text-xs text-slate-500">L</div>
+            <div class="font-semibold text-danger">{{ entry.losses }}</div>
+          </div>
+          <div class="rounded-lg bg-slate-800/50 px-2 py-1.5">
+            <div class="text-xs text-slate-500">Extra</div>
+            <div class="font-medium text-info">{{ entry.extra_points }}</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

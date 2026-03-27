@@ -92,20 +92,20 @@ async function submit() {
     <span>Loading game data...</span>
   </div>
 
-  <div v-else-if="game" class="space-y-6">
+  <div v-else-if="game" class="space-y-4 sm:space-y-6">
     <!-- Header -->
     <div>
-      <h1 class="font-display text-4xl font-bold tracking-tight text-slate-50">Game #{{ game.id }}</h1>
+      <h1 class="font-display text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">Game #{{ game.id }}</h1>
       <p class="mt-1 text-slate-400">Round {{ game.round_number }} &middot; Table {{ game.table_number }}</p>
     </div>
 
     <!-- Winning Team -->
-    <div class="rounded-xl border border-slate-800 bg-surface p-6">
+    <div class="rounded-xl border border-slate-800 bg-surface p-4 sm:p-6">
       <label class="mb-3 block text-sm font-semibold uppercase tracking-wider text-slate-400">Winning Team</label>
       <div class="flex items-center gap-4">
         <select
           v-model="winningTeam"
-          class="rounded-lg border border-slate-700 bg-slate-900 px-4 py-2.5 text-slate-200 transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+          class="min-h-[44px] rounded-lg border border-slate-700 bg-slate-900 px-4 py-2.5 text-slate-200 transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
         >
           <option value="">-- Select --</option>
           <option value="RED">RED</option>
@@ -123,8 +123,8 @@ async function submit() {
       </div>
     </div>
 
-    <!-- Seats Table -->
-    <div class="overflow-hidden rounded-xl border border-slate-800">
+    <!-- Seats: Desktop Table -->
+    <div class="hidden sm:block overflow-hidden rounded-xl border border-slate-800">
       <table class="w-full">
         <thead>
           <tr class="border-b border-slate-700 bg-slate-800/50">
@@ -164,16 +164,49 @@ async function submit() {
       </table>
     </div>
 
+    <!-- Seats: Mobile Cards -->
+    <div class="space-y-3 sm:hidden">
+      <div v-for="(seat, i) in game.seats" :key="seat.id" class="rounded-xl border border-slate-800 bg-surface p-4">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-warning/10 text-sm font-bold text-warning">
+            {{ seat.seat_number }}
+          </span>
+          <span class="text-base font-medium text-slate-200">{{ seat.display_name }}</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="mb-1 block text-xs font-medium uppercase text-slate-500">Role</label>
+            <select
+              v-model="seatRoles[i]"
+              class="min-h-[44px] w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-slate-200 transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            >
+              <option value="">-- Role --</option>
+              <option v-for="role in ROLES" :key="role" :value="role">{{ role }}</option>
+            </select>
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-medium uppercase text-slate-500">Extra Pts</label>
+            <input
+              type="number"
+              step="0.1"
+              v-model.number="seatExtras[i]"
+              class="min-h-[44px] w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-slate-200 transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Best Move Section -->
-    <div class="rounded-xl border border-slate-800 bg-surface p-6">
+    <div class="rounded-xl border border-slate-800 bg-surface p-4 sm:p-6">
       <h2 class="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-400">First Night Kill & Best Move</h2>
 
       <div class="space-y-3">
-        <div class="flex items-center gap-4">
-          <label class="w-44 font-medium text-slate-400">Killed first night</label>
+        <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-4">
+          <label class="text-sm font-medium text-slate-400 sm:w-44">Killed first night</label>
           <select
             v-model="killedSeat"
-            class="rounded-lg border border-slate-700 bg-slate-900 px-4 py-2.5 text-slate-200 transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            class="min-h-[44px] w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-slate-200 transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent sm:w-auto sm:px-4 sm:text-base"
           >
             <option value="">-- None --</option>
             <option
@@ -187,11 +220,11 @@ async function submit() {
         </div>
 
         <template v-if="killedSeat !== ''">
-          <div v-for="n in 3" :key="n" class="flex items-center gap-4">
-            <label class="w-44 font-medium text-info">Guess {{ n }}</label>
+          <div v-for="n in 3" :key="n" class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-4">
+            <label class="text-sm font-medium text-info sm:w-44">Guess {{ n }}</label>
             <select
               v-model="bestMoveGuesses[n - 1]"
-              class="rounded-lg border border-slate-700 bg-slate-900 px-4 py-2.5 text-slate-200 transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              class="min-h-[44px] w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-slate-200 transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent sm:w-auto sm:px-4 sm:text-base"
             >
               <option value="">-- None --</option>
               <option
@@ -216,14 +249,14 @@ async function submit() {
       <button
         @click="submit"
         :disabled="!canSubmit || saving"
-        class="cursor-pointer rounded-lg bg-accent px-6 py-3 font-semibold text-slate-950 transition-all hover:bg-green-400 hover:shadow-lg hover:shadow-accent/25 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-accent disabled:hover:shadow-none"
+        class="min-h-[44px] flex-1 cursor-pointer rounded-lg bg-accent px-6 py-3 font-semibold text-slate-950 transition-all hover:bg-green-400 hover:shadow-lg hover:shadow-accent/25 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-accent disabled:hover:shadow-none sm:flex-none"
       >
         {{ saving ? 'Saving...' : 'Save Result' }}
       </button>
       <button
         @click="router.back()"
         type="button"
-        class="cursor-pointer rounded-lg border border-slate-700 px-6 py-3 font-medium text-slate-400 transition-colors hover:border-slate-500 hover:text-slate-200"
+        class="min-h-[44px] cursor-pointer rounded-lg border border-slate-700 px-6 py-3 font-medium text-slate-400 transition-colors hover:border-slate-500 hover:text-slate-200"
       >
         Back
       </button>
