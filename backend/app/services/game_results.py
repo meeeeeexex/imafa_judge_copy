@@ -71,10 +71,12 @@ def validate_and_save_result(db: Session, game: Game, data: GameResultInput) -> 
     if data.killed_first_night_seat is not None and data.best_move_guesses:
         bonus = calc_best_move_bonus(data.best_move_guesses, seat_roles)
         killed_seat = existing_seats[data.killed_first_night_seat]
-        killed_seat.extra_points += bonus
+        killed_seat.extra_points = round(killed_seat.extra_points + bonus, 1)
 
     # Save best move guesses (replace existing)
-    game.best_move_guesses.clear()
+    for old_guess in list(game.best_move_guesses):
+        db.delete(old_guess)
+    db.flush()
     for guess_sn in data.best_move_guesses:
         game.best_move_guesses.append(
             BestMoveGuess(game_id=game.id, guessed_seat_number=guess_sn)

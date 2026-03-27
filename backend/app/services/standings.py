@@ -63,8 +63,8 @@ def compute_standings(db: Session, tournament_id: int) -> list[StandingsEntry]:
                 wins=s["wins"],
                 losses=s["losses"],
                 base_points=s["base_points"],
-                extra_points=s["extra_points"],
-                total_points=s["base_points"] + s["extra_points"],
+                extra_points=round(s["extra_points"], 1),
+                total_points=round(s["base_points"] + s["extra_points"], 1),
             )
         )
 
